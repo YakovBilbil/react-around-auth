@@ -1,8 +1,47 @@
-Around the U.S. project on React, featuring authorization and registration.
+# Project 4: Around the U.S.
 
-This repository will contain your own front-end project on React with added authorization and registration features.
-Start working with your previously built front end code from Sprint 11.
+### Overview
 
-All authorization, registration and token requests must go through to the server running on [https://register.nomoreparties.co](https://register.nomoreparties.co/).
+- A description of the project and its functionality
+- A description of the technologies and techniques used
+- The link to GitHub Pages
 
-Good luck!
+**A description of the project and its functionality**
+
+"Around The U.S." — an interactive page where users can add, remove, or like photos.
+
+**A description of the technologies and techniques used**
+
+- Figma
+
+- BEM method
+
+- Flexbox
+
+- Grid
+
+- Media queries
+
+- Forms
+
+- JavaScript
+
+- Webpack
+
+- Bable
+
+- OOP Developing Paradigm
+
+- React
+
+**The link to GitHub Pages**
+
+https://yakovbilbil.github.io/around-react/index.html
+
+### Social media:
+
+- <img class="footer__social-icons" src="./src/images/facebook_white.svg" alt="Facebook icon"> Facebook
+
+- <img class="footer__social-icons" src="./src/images/instagram_white.svg" alt="Instagram icon"> Instagram
+
+&copy; 2021 Yakov Bilbil
