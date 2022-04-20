@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import api from "../utils/api";
@@ -10,6 +12,12 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import VerifyDeletePopup from "./VerifyDeletePopup";
+
+import ProtectedRoute from "./ProtectedRoute";
+import Register from "./Register";
+import Login from "./Login";
+import InfoTooltip from "./InfoTooltip";
+import * as auth from "../utils/auth";
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -125,59 +133,169 @@ function App() {
     setIsVerifyDeletePopupOpen(false);
     setCardForDelete({});
     setCardForImagePopup({});
+    setisInfoTooltipOpen(false);
   }
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+  });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setValues({ ...values, [name]: value });
+  };
+
+  const navigate = useNavigate();
+
+  const handleAuthorizeSubmit = async () => {
+    try {
+      const res = await auth.authorize(values.email, values.password);
+      if (res) {
+        setIsLoggedIn(true);
+        navigate("/react-around-auth/");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const [isRegistrationSucceeded, setisRegistrationSucceeded] = useState(false);
+  const [isInfoTooltipOpen, setisInfoTooltipOpen] = useState(false);
+  const handleRegisterSubmit = async () => {
+    try {
+      const res = await auth.register(values.email, values.password);
+      if (res.ok) {
+        setisRegistrationSucceeded(true);
+        setisInfoTooltipOpen(true);
+        navigate("/react-around-auth/signin");
+      } else {
+        setisRegistrationSucceeded(false);
+        setisInfoTooltipOpen(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    (async function () {
+      const jwt = localStorage.getItem("jwt");
+      if (jwt) {
+        try {
+          const res = await auth.checkTokenAndGetUserEmail(jwt);
+          if (res) {
+            setIsLoggedIn(true);
+            setValues({ email: res.email, password: res.password });
+          }
+        } catch (error) {
+          console.log("CAUGHT ERROR", error);
+        }
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/react-around-auth/");
+    }
+  }, [isLoggedIn, navigate]);
+
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
-        <div className="container">
-          <Header />
-          <Main
-            onEditAvatarClick={handleEditAvatarClick}
-            onEditProfileClick={handleEditProfileClick}
-            onAddPlaceClick={handleAddPlaceClick}
-            onCardClick={handleCardClick}
-            cards={cards}
-            onCardLike={handleCardLike}
-            onTrashClick={handleTrashClick}
-            onCardDelete={handleCardDelete}
+    <>
+      <CurrentUserContext.Provider value={currentUser}>
+        <div className="page">
+          <div className="container">
+            <Routes>
+              <Route
+                path="/react-around-auth/"
+                element={
+                  <ProtectedRoute
+                    element={
+                      <>
+                        <Header />
+                        <Main
+                          onEditAvatarClick={handleEditAvatarClick}
+                          onEditProfileClick={handleEditProfileClick}
+                          onAddPlaceClick={handleAddPlaceClick}
+                          onCardClick={handleCardClick}
+                          cards={cards}
+                          onCardLike={handleCardLike}
+                          onTrashClick={handleTrashClick}
+                          onCardDelete={handleCardDelete}
+                        />
+                        <Footer />
+                      </>
+                    }
+                    isLoggedIn={isLoggedIn}
+                  />
+                }
+              />
+
+              <Route
+                path="/react-around-auth/signup"
+                element={
+                  <Register
+                    onChange={handleChange}
+                    onSubmit={handleRegisterSubmit}
+                  />
+                }
+              />
+
+              <Route
+                path="/react-around-auth/signin"
+                element={
+                  <Login
+                    onChange={handleChange}
+                    onSubmit={handleAuthorizeSubmit}
+                  />
+                }
+              />
+            </Routes>
+          </div>
+
+          <InfoTooltip
+            popupName={"registration-info"}
+            isOpen={isInfoTooltipOpen}
+            onClose={closeAllPopups}
+            isRegistrationSucceeded={isRegistrationSucceeded}
           />
-          <Footer />
+
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupOpen}
+            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
+          />
+
+          <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopups}
+            onUpdateUser={handleUpdateUser}
+          />
+
+          <AddPlacePopup
+            isOpen={isAddPlacePopupOpen}
+            onClose={closeAllPopups}
+            onAddPlaceSubmit={handleAddPlaceSubmit}
+          />
+
+          <VerifyDeletePopup
+            isOpen={isVerifyDeletePopupOpen}
+            cardForDelete={cardForDelete}
+            onClose={closeAllPopups}
+            onConfirmDeleteClick={handleCardDelete}
+          />
+
+          <ImagePopup
+            popupName={"card-image"}
+            isCardPopupOpen={isCardPopupOpen}
+            cardForImagePopup={cardForImagePopup}
+            onClose={closeAllPopups}
+          />
         </div>
-
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}
-        />
-
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser}
-        />
-
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onAddPlaceSubmit={handleAddPlaceSubmit}
-        />
-
-        <VerifyDeletePopup
-          isOpen={isVerifyDeletePopupOpen}
-          cardForDelete={cardForDelete}
-          onClose={closeAllPopups}
-          onConfirmDeleteClick={handleCardDelete}
-        />
-
-        <ImagePopup
-          popupName={"card-image"}
-          isCardPopupOpen={isCardPopupOpen}
-          cardForImagePopup={cardForImagePopup}
-          onClose={closeAllPopups}
-        />
-      </div>
-    </CurrentUserContext.Provider>
+      </CurrentUserContext.Provider>
+    </>
   );
 }
 

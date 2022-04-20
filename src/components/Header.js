@@ -1,6 +1,6 @@
 import headerImage from "../images/headerImage.svg";
 
-function Header() {
+function Header({ children }) {
   return (
     <header className="header">
       <img
@@ -8,6 +8,7 @@ function Header() {
         src={headerImage}
         alt="Title: Around the U.S."
       />
+      {children}
     </header>
   );
 }

@@ -1,7 +1,13 @@
 import { useEffect } from "react";
 import closeIcon from "../images/close-icon.svg";
 
-const Popup = ({ isOpen, name, onClose, children }) => {
+const Popup = ({
+  isOpen,
+  name,
+  onClose,
+  children,
+  popupFormCloseButtonNewClass,
+}) => {
   useEffect(() => {
     if (!isOpen) return;
 
@@ -30,7 +36,7 @@ const Popup = ({ isOpen, name, onClose, children }) => {
 
         <button
           type="button"
-          className="popup__form-close-button"
+          className={`popup__form-close-button ${popupFormCloseButtonNewClass}`}
           aria-label="Close"
           onClick={onClose}
         >
