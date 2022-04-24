@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import Header from "./Header.js";
 
 const Login = ({ onChange, onSubmit }) => {
@@ -15,12 +15,17 @@ const Login = ({ onChange, onSubmit }) => {
     onChange(e);
   };
 
+  const navigate = useNavigate();
+
   return (
     <>
       <Header>
-        <a className="header__sign-button" href="/react-around-auth/signup">
+        <div
+          className="header__sign-button"
+          onClick={() => navigate("/react-around-auth/signup")}
+        >
           Sign Up
-        </a>
+        </div>
       </Header>
 
       <div className="popup__container">
@@ -64,12 +69,12 @@ const Login = ({ onChange, onSubmit }) => {
             >
               Log in
             </button>
-            <a
+            <div
               className="popup__form-save-button popup__form-save-button_sign"
-              href="/react-around-auth/signup"
+              onClick={() => navigate("/react-around-auth/signup")}
             >
               Not a member yet? Sign up here!
-            </a>
+            </div>
           </form>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import CurrentUserContext from "../contexts/CurrentUserContext";
 import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
@@ -8,12 +7,6 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
   function handleAvatarChange(e) {
     setAvatar(e.target.value);
   }
-
-  const currentUser = useContext(CurrentUserContext);
-
-  useEffect(() => {
-    setAvatar(currentUser.avatar);
-  }, [currentUser]);
 
   function handleSubmit(e) {
     e.preventDefault();

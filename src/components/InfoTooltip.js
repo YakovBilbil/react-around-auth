@@ -41,13 +41,13 @@ const InfoTooltip = ({
       popupFormCloseButtonNewClass={popupFormCloseButtonNewClass}
     >
       <div className="popup__form">
-        <form className="popup__form-submit popup__form-submit-info-tool">
+        <div className="popup__form-submit popup__form-submit-info-tool">
           {isRegistrationSucceeded ? (
             <RegistraionSuccededContent />
           ) : (
             <RegistraionFailedContent />
           )}
-        </form>
+        </div>
       </div>
     </Popup>
   );

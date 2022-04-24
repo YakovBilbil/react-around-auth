@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Header from "./Header";
 
@@ -15,12 +16,17 @@ const Register = ({ onChange, onSubmit }) => {
     onChange(e);
   };
 
+  const navigate = useNavigate();
+
   return (
     <>
       <Header>
-        <a className="header__sign-button" href="/react-around-auth/signin">
+        <div
+          className="header__sign-button"
+          onClick={() => navigate("/react-around-auth/signin")}
+        >
           Sign In
-        </a>
+        </div>
       </Header>
 
       <div className="popup__container">
@@ -65,12 +71,12 @@ const Register = ({ onChange, onSubmit }) => {
               Sign up
             </button>
 
-            <a
+            <div
               className="popup__form-save-button popup__form-save-button_sign"
-              href="/react-around-auth/signin"
+              onClick={() => navigate("/react-around-auth/signin")}
             >
               Already a member? Log in here!
-            </a>
+            </div>
           </form>
         </div>
       </div>
